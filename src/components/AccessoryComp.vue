@@ -81,6 +81,9 @@
         name: "AccessoryComp",
         props:[
             "accessory",         /*附件所有未处理的数据*/
+
+
+
             "seriesid",          /*系列id*/
             "Spe_titIdList"      /*本体规格所有标题的id组成的数组*/
         ],
