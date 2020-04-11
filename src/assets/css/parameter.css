@@ -1,0 +1,55 @@
+*{
+    margin: 0 auto;
+}
+.Charector{
+    width: 96%;
+    max-height: 620px;
+    overflow-y: auto;
+}
+.charector-null{
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+}
+.charector-all{
+    width: 98%;
+    height: auto;
+    border: 1px solid #f6f6f7;
+}
+.charector-tit{
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    background: #f6f6f7;
+    border: 0.1px solid white;
+}
+.charector-tit h5{
+    margin-left: 10px;
+}
+.charector-opt{
+    width: 100%;
+    height: auto;
+    /*border: 1px solid black;*/
+}
+.charector-opt li{
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    list-style: none;
+}
+.charector-optleft{
+    width: 70%;
+    height: 30px;
+    float: left;
+    font-size: 12px;
+    padding-left: 10px;
+    border: 0.1px solid #f6f6f7;
+}
+.charector-optright{
+    width: 27%;
+    height: 30px;
+    float: left;
+    font-size: 12px;
+    padding-left: 10px;
+    border: 0.1px solid #f6f6f7;
+}

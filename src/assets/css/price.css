@@ -1,0 +1,64 @@
+.Price-all{
+    width: 100%;
+    height: 620px;
+}
+.Price-top{
+    width: 100%;
+    height: 45%;
+}
+.Price-name{
+    width: 100%;
+    height: 10%;
+}
+.Price-name h3{
+    margin-left: 30px;
+}
+.Price-count{
+    width: 100%;
+    height: 89%;
+}
+.Price-count-left{
+    width: 35%;
+    height: 100%;
+    float: left;
+}
+.Price-count-left img{
+    width: 150px;
+    height: 170px;
+    margin-top: 20px;
+    margin-left: 25px;
+}
+.Price-count-right{
+    width: 64%;
+    height: 100%;
+    float: left;
+}
+.Pr-categary{
+    margin-top: 20px;
+}
+.Pr-categary span{
+    float: left;
+}
+.Pr-Price{
+    margin-top: 20px;
+}
+.label{
+
+}
+.price{
+    color: red;
+    margin-left: 10px;
+}
+.date{
+    width: 20px;
+    height: 20px;
+    margin-top: 20px;
+}
+.Price-buttom{
+    margin-left: 5px;
+    width: 98%;
+    height: 55%;
+}
+.table{
+    width: 200px;
+}

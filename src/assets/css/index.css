@@ -1,0 +1,78 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    background: white;
+}
+/*总框*/
+.web-all{
+    width: 1200px;
+    height: 750px;
+    margin: 0 auto;
+    margin-top: 80px;
+    box-shadow: 5px 5px 5px #e4e7ed;
+    border: 1px solid #e4e7ed;
+}
+/*头部框*/
+.web-top{
+    width: 100%;
+    height: 70px;
+}
+/*中间框*/
+.web-body{
+    width: 100%;
+    height: 680px;
+}
+/*中间左边（本体规格和附件选择）*/
+.body-left{
+    width: 600px;
+    height: 100%;
+    border: 1px solid #e4e7ed;
+}
+/*中间右边边（产品价格和特性参数）*/
+.body-right{
+    width: 598px;
+    height: 100%;
+    border: 1px solid #e4e7ed;
+}
+/*系列框*/
+.xilie-content{
+    width: 890px;
+    height: 100%;
+    position: absolute;
+    left: 328px;
+    top: 0px;
+    background: white;
+    z-index: 100;
+    overflow: auto;
+    outline: 1px solid black;
+}
+.xilie-condiv{
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+}
+.xilie-condiv h1{
+    width: 500px;
+    height: 40px;
+    font-size: 24px;
+    margin-left: 20px;
+    line-height: 40px;
+}
+.xilie-content-ul{
+    width: 100%;
+    height: auto;
+    padding-bottom: 20px;
+    list-style: none;
+}
+.xilie-content-ul li{
+    float: left;
+    width: auto;
+    font-size: 14px;
+    margin-left: 20px;
+    margin-top: 10px;
+}
+.xilie-content-ul li:hover{
+    color: red;
+}

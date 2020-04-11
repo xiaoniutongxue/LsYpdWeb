@@ -1,0 +1,123 @@
+.Accessory{
+    width: 100%;
+    max-height: 620px;
+    overflow-y:auto;
+}
+.accisNull{
+    margin-top: 20px;
+    text-align: center;
+}
+.Accessory-all{
+    width: 100%;
+    height: auto;
+}
+.Accessory-title{
+    width: 100%;
+    height: 20px;
+    margin-top: 15px;
+}
+.Accessory-title span{
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 20px;
+}
+.Accessory-count{
+    width: 100%;
+    height: 100%;
+}
+.Accessory-count-li{
+    height: 100%;
+    list-style: none;
+    float: left;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 30px;
+    margin-top: 10px;
+}
+.changeColorAcc{
+    color: #409eff;
+}
+.changeParcolor{
+    color: #409eff;
+}
+/*附件选择详情参数div*/
+.liParticulars{
+    width:380px;
+    height: auto;
+    position: relative;
+    left: 0px;
+    overflow:hidden;
+    background: #f9f8f8;
+    border: 1px solid white;
+}
+.liParticulars-top{
+    width: 90%;
+    height: 50px;
+    margin: 0 auto;
+    margin-top: 15px;
+    /*border: 1px solid red;*/
+}
+.liParticulars-topimg{
+    width: 19%;
+    height: auto;
+    float: left;
+    /*border: 1px solid black;*/
+}
+.liParticulars-topimg img{
+    width: 50px;
+    height: 50px;
+    margin-left: 10px;
+}
+.liParticulars-toplist{
+    width: 79%;
+    height: auto;
+    float: left;
+    /*border: 1px solid black;*/
+}
+.liParticulars-toplist li{
+    height: 20px;
+    list-style:none;
+    margin-left: 5px;
+}
+.liParticulars-buttom{
+    width: 90%;
+    height: auto;
+    margin: 0 auto;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    overflow:hidden;
+    /*border: 1px solid red;*/
+}
+.liParticulars-buttomAll{
+    width: 100%;
+    height: auto;
+    overflow:hidden;
+    /*border: 1px solid yellow;*/
+}
+.liParticulars-buttom-letftit{
+    width: 34%;
+    height: auto;
+    font-size: 10px;
+    margin-top: 7px;
+    text-align: right;
+    float: left;
+    /*display: table-row;*/
+    /*border: 1px solid blue;*/
+}
+.liParticulars-buttom-rightopt{
+    width: 63%;
+    height: auto;
+    font-size: 10px;
+    float: left;
+    padding-left: 5px;
+    /*border: 1px solid orange;*/
+}
+.liParticulars-li{
+    height: auto;
+    list-style: none;
+    float: left;
+    margin-left: 10px;
+    margin-top: 5px;
+    margin-bottom: 2px;
+    /*border: 1px solid black;*/
+}
