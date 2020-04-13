@@ -29,6 +29,8 @@
                         <el-tab-pane label="附件选择" name="second">
                             <AccessoryComp
                                     :Spe_titIdList="Spe_titIdList"
+                                    :Spe_SelectedOptlist="Spe_SelectedOptlist"
+                                    :Spe_SelectedValuelist="Spe_SelectedValuelist"
                                     :seriesid="seriesid"
                                     :accessory="accessory"
                             ></AccessoryComp>
@@ -107,6 +109,8 @@
                 combID:'',
                 Spe_titIdList:"",        /*本体规格标题变换的字符串*/
                 Spe_optIdStr:"",        /*本体规格选项变换的字符串*/
+                Spe_SelectedOptlist:"", /*本体规格选中选项的数组*/
+                Spe_SelectedValuelist:"",   /*本体规格选中选项值的数组*/
 
                 /*附件选择模块数据*/
                 accessory:[],   /*附件选择模块所有数据*/
@@ -163,6 +167,7 @@
             /*
             * 本体规格模块数据
             * */
+
             /*根据第三层数据的id值查询出本体规格数据所有的数据*/
             get_serieslist(id){
                 this.$axios
@@ -195,12 +200,12 @@
             },
 
             /*得到本体规格选项变换的数据*/
-            get_Specificationlist(Spe_optIdStr,Spe_titIdList){
+            get_Specificationlist(Spe_optIdStr,Spe_titIdList,Spe_SelectedOptlist,Spe_SelectedValuelist){
                 this.Spe_optIdStr=Spe_optIdStr;
                 this.Spe_titIdList=Spe_titIdList;
+                this.Spe_SelectedOptlist=Spe_SelectedOptlist;
+                this.Spe_SelectedValuelist=Spe_SelectedValuelist;
             },
-
-            /*得到本体规格选项变换时的选项值和*/
 
             /*
             * 附件选择模块数据

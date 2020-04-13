@@ -1,3 +1,4 @@
+<!--产品价格模块-->
 <template>
     <div class="Price-all">
         <div class="Price-top">

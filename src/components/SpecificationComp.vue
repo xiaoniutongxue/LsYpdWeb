@@ -1,3 +1,4 @@
+<!--本体规格模块-->
 <template>
     <div class="Specifica" id="classlist">
         <!--遍历可以选择的规格标题-->
@@ -43,6 +44,7 @@
                 /*本体规格默认*/
                 Spe_originalTitleIdList:[],     /*原始默认的标题id组成的数组*/
                 Spe_originalTitleIdStr:"",      /*原始默认的标题id组成的字符串*/
+                Spe_originalOptionIdList:[],    /*原始默认的标题id组成的数组*/
                 Spe_originalOptionIdStr:"",     /*原始默认的选项id组成的字符串*/
 
                 /*本体规格关系*/
@@ -120,8 +122,10 @@
 
                 /*得到原始的选项optID组成的字符串*/
                 let OptionIds="";
+                this.Spe_originalOptionIdList=[];
                 for(let i=0;i<list.length;i++){
                     OptionIds=OptionIds+"-"+list[i].child[0].optID;
+                    this.Spe_originalOptionIdList.push(list[i].child[0].optID)
                 }
                 this.Spe_originalOptionIdStr=OptionIds.substring(1,OptionIds.length);
             },
@@ -145,12 +149,12 @@
                         }
 
                         this.SpeRel_defalutShowOpt=[];
-                        let relindex=0;
+                        let relindex=0,fOptIDs;
                         /*遍历出需要显示的所有选项*/
                         for(let i=0;i<this.Spe_originalTitleIdList.length;i++){
                             if(this.SpeRel_defaultTit.includes(this.Spe_originalTitleIdList[i])){
-                                let fOptIDs=this.SpeRel_AllRellist[relindex].fOptIDs.split(",");
-                                relindex++;
+                                relindex=this.get_Arrindex(this.SpeRel_defaultTit,this.Spe_originalTitleIdList[i]);
+                                fOptIDs=this.SpeRel_AllRellist[relindex].fOptIDs.split(",");
                                 for(let j=0;j<fOptIDs.length;j++){
                                     this.SpeRel_defalutShowOpt.push(parseInt(fOptIDs[j]))
                                 }
@@ -190,18 +194,42 @@
                     /*没有改变的选项,添加第一个*/
                     else{
                         reltit=this.get_Arrindex(this.Spe_originalTitleIdList,this.Spe_originalTitleIdList[i]);
-                        index=this.specification[reltit].child[0].optID;
+                        for(let j=0;j<this.specification[reltit].child.length;j++){
+                            if(this.Spe_originalOptionIdList==""){
+                                index=this.specification[reltit].child[0].optID;
+                            }else{
+                                if(this.Spe_originalOptionIdList.includes(this.specification[reltit].child[j].optID)){
+                                    index=this.specification[reltit].child[j].optID;
+                                }
+                            }
+                        }
                     }
                     this.Spe_DefSelectedOptList.push(index);
                 }
-                /*循环得到选中的选项id组成的字符串*/
-                let SelectedOpt="";
+
+                /*循环得到选中的标题和选项id组成的字符串及数据*/
+                let SelectedOpt="",SelecteOptVlue="";               /*定义已经选中的选项id和选项值*/
+                let SelectedOptlist=[],SelectedValuelist=[];        /*定义已经选中的选项id数组和选项值数组*/
                 for(let i=0;i<this.Spe_DefSelectedOptList.length;i++){
                     SelectedOpt=SelectedOpt+'-'+this.Spe_DefSelectedOptList[i];
+                    SelectedOptlist.push(this.Spe_DefSelectedOptList[i]);       /*得到已经选中的选项id数组*/
+                }
+                let SelectOpLi=document.getElementsByClassName('changeColor');
+                for(let i=0;i<this.Spe_DefSelectedOptList.length;i++){
+                    if(SelectOpLi.length==0){
+                        SelecteOptVlue=this.specification[i].child[0].optValue;
+                    }else{
+                        for(let j=0;j<this.specification[i].child.length;j++){
+                            if(this.Spe_DefSelectedOptList.includes(this.specification[i].child[j].optID)){
+                                SelecteOptVlue=this.specification[i].child[j].optValue
+                            }
+                        }
+                    }
+                    SelectedValuelist.push(SelecteOptVlue);         /*得到已经选中的选项id值得数组*/
                 }
                 let DefSelectedOptStr=SelectedOpt.substring(1,SelectedOpt.length);
                 /*将本体规格选中的标题id和选项id组成的字符串传入父组件*/
-                this.$emit("Specificationlist",DefSelectedOptStr,this.Spe_originalTitleIdList)
+                this.$emit("Specificationlist",DefSelectedOptStr,this.Spe_originalTitleIdList,SelectedOptlist,SelectedValuelist)
             },
 
             /*得到点击时选项id组成的数组*/
@@ -213,10 +241,12 @@
                     this.Spe_invariabilityOptList.push(parseInt(optionId[j].id));
                 }
 
-                /*获取本体规格所有选项的id组成的字符串*/
+                /*获取本体规格所有选项的id组成的数组及字符串*/
                 let OptionIds="";
+                this.Spe_originalOptionIdList=[];
                 for(let i=0;i<optionId.length;i++){
                     OptionIds=OptionIds+"-"+optionId[i].id;
+                    this.Spe_originalOptionIdList.push(parseInt(optionId[i].id));
                 }
                 this.Spe_originalOptionIdStr=OptionIds.substring(1,OptionIds.length);
                 this.Spe_ClickTitindex=i;
