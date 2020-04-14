@@ -65,7 +65,7 @@
                 handler(newVal,oldVal){
                     this.Spe_ClickTitindex=-1;
                     this.Spe_invariabilityOptList=[];
-                    this.get_DefaultTitAndOpt(newVal);
+                    this.get_DefaultTitAndOpt(newVal);  /*得到默认的标题id和选项id字符串*/
                 }
             },
             Spe_originalOptionIdStr:{
@@ -86,6 +86,7 @@
 
             /*判断哪些时需要显示的选项*/
             is_ShowOpt(optID){
+                /*return true;*/
                 return this.SpeRel_defalutShowOpt.includes(optID);
             },
 
@@ -137,6 +138,7 @@
                     .then(response => {
                         /*接收到后台传入的所有数据*/
                         this.SpeRel_AllRellist=response.data;
+                        /*console.log(this.SpeRel_AllRellist)*/
                         /*得到需要改变的标题id数组及其默认选项*/
                         this.SpeRel_defaultTit=[];
                         this.SpeRel_defaultOpt=[];
@@ -165,6 +167,8 @@
                                 }
                             }
                         }
+                        /*console.log("需要显示的选项")
+                        console.log(this.SpeRel_defalutShowOpt)*/
                         /*get_DefSelectedOptlist()方法获取默认选中id数组*/
                         this.get_DefSelectedOptlist();
                     })
@@ -185,28 +189,21 @@
 
                 /*得到点击时该标题以下已经选中的选项*/
                 let index,reltit;
-                for (let i=this.Spe_ClickTitindex+1;i<this.Spe_originalTitleIdList.length;i++){
-                    /*需要改变的选项，添加默认fOptDefaultID*/
+                let len=this.Spe_originalTitleIdList.length;
+                for(let i=this.Spe_ClickTitindex+1;i<len;i++){
                     if(this.SpeRel_defaultTit.includes(this.Spe_originalTitleIdList[i])){
-                        reltit=this.get_Arrindex(this.SpeRel_defaultTit,this.Spe_originalTitleIdList[i]);
-                        index=this.SpeRel_AllRellist[reltit].fOptDefaultID;
-                    }
-                    /*没有改变的选项,添加第一个*/
-                    else{
-                        reltit=this.get_Arrindex(this.Spe_originalTitleIdList,this.Spe_originalTitleIdList[i]);
-                        for(let j=0;j<this.specification[reltit].child.length;j++){
-                            if(this.Spe_originalOptionIdList==""){
-                                index=this.specification[reltit].child[0].optID;
-                            }else{
-                                if(this.Spe_originalOptionIdList.includes(this.specification[reltit].child[j].optID)){
-                                    index=this.specification[reltit].child[j].optID;
-                                }
-                            }
-                        }
+                        reltit=this.get_Arrindex(this.SpeRel_defaultTit,this.Spe_originalTitleIdList[i])
+                        index=this.SpeRel_defaultOpt[reltit]
+                    }else{
+                        index=this.Spe_originalOptionIdList[i];
                     }
                     this.Spe_DefSelectedOptList.push(index);
                 }
+                this.get_SpeOptandOptvalue();
+            },
 
+            /*得到本体规格已经选中的选项id和选项值*/
+            get_SpeOptandOptvalue(){
                 /*循环得到选中的标题和选项id组成的字符串及数据*/
                 let SelectedOpt="",SelecteOptVlue="";               /*定义已经选中的选项id和选项值*/
                 let SelectedOptlist=[],SelectedValuelist=[];        /*定义已经选中的选项id数组和选项值数组*/
@@ -214,15 +211,10 @@
                     SelectedOpt=SelectedOpt+'-'+this.Spe_DefSelectedOptList[i];
                     SelectedOptlist.push(this.Spe_DefSelectedOptList[i]);       /*得到已经选中的选项id数组*/
                 }
-                let SelectOpLi=document.getElementsByClassName('changeColor');
                 for(let i=0;i<this.Spe_DefSelectedOptList.length;i++){
-                    if(SelectOpLi.length==0){
-                        SelecteOptVlue=this.specification[i].child[0].optValue;
-                    }else{
-                        for(let j=0;j<this.specification[i].child.length;j++){
-                            if(this.Spe_DefSelectedOptList.includes(this.specification[i].child[j].optID)){
-                                SelecteOptVlue=this.specification[i].child[j].optValue
-                            }
+                    for(let j=0;j<this.specification[i].child.length;j++){
+                        if(this.Spe_DefSelectedOptList.includes(this.specification[i].child[j].optID)){
+                            SelecteOptVlue=this.specification[i].child[j].optValue
                         }
                     }
                     SelectedValuelist.push(SelecteOptVlue);         /*得到已经选中的选项id值得数组*/

@@ -54,7 +54,7 @@
                                         {{par_tititem.propID}}
                                     </div>
                                     <ul class="liParticulars-buttom-rightopt">
-                                        <div @click="get_AccParChangelist(divindex,optitem.child,optitem.compID)" ref="Parli">
+                                        <div @click="get_AccParChangelist(divindex)">
                                             <li v-for="(par_optitem,liindex) in par_tititem.child"
                                                 :id="par_optitem.optID"
                                                 :value="optitem.compID"
@@ -101,11 +101,13 @@
                 Acc_ParTitStr:"",     /*详情框所有标题id的字符串*/
                 Acc_ParOptlist:[],    /*详情框所有选项id的数组*/
                 Acc_ParOptStr:"",     /*详情框所有选项id的字符串*/
+                Acc_ParComplist:[],     /*附件选择所有compid组成的数组*/
 
                 /*附件选择详情框选用状态*/
-                Acc_ParStaateproplist:[],
-                Acc_ParDisSelectlist:[],
-                Acc_ParDisShowlist:[],
+                Acc_ParStaateproplist:[],       /*选用状态数组*/
+                Acc_ParDisSelectlist:[],        /*不可选数组*/
+                Acc_ParDisShowlist:[],          /*不显示数组*/
+                Acc_Parlist:[],                 /*详情框数组*/
 
                 /*附件选择关系*/
                 AccRel_AllRellist:[],   /*详情框所有关系*/
@@ -132,18 +134,14 @@
             },
             Spe_SelectedOptlist:{
                 handler(newVal,oldVal){
+                    this.m=0;
                     /*调用get_AccParData方法得到详情框相应数据*/
                     this.get_AccParData();
 
                     /*调用get_Accdynamiclist方法得到详情框关系相应数据*/
                     this.get_Accdynamiclist(this.Acc_ParTitStr,this.Acc_ParOptStr,this.seriesid,this.Acc_ParAllList)
                 }
-            }
-        },
-        mounteds(){
-            this.$nextTick(function(){
-                this.a()
-            })
+            },
         },
         methods:{
             /*得到附件选择处理好可以显示的数据*/
@@ -169,9 +167,8 @@
                 }
             },
 
-            /*得到详情框数据*/
+            /*得到详情框所有数据*/
             get_AccParData(){
-                let i=0,j=0,z=0,s=0;
                 this.Acc_ParAllList=[];
                 this.Acc_ParStaateproplist=[];
                 this.Acc_ParDisShowlist=[];
@@ -179,12 +176,18 @@
                 for(let i=0;i<this.Acc_AccAllData.length;i++){
                     for(let j=0;j<this.Acc_AccAllData[i].child.length;j++){
                         for(let z=0;z<this.Acc_AccAllData[i].child[j].child.length;z++){
-                            this.Acc_ParAllList.push(this.Acc_AccAllData[i].child[j].child[z])
+                            /*得到所有详情框标题和选项数组*/
+                            this.Acc_ParAllList.push(this.Acc_AccAllData[i].child[j].child[z]);
                             if(this.Acc_AccAllData[i].child[j].child[z].propName=="选用状态"){
+                                /*得到所有选用状态数组*/
                                 this.Acc_ParStaateproplist.push(this.Acc_AccAllData[i].child[j].child[z].propID)
                                 for(let s=0;s<this.Acc_AccAllData[i].child[j].child[z].child.length;s++){
+                                    /*得到所有不选用和compid数组对象*/
                                     if(this.Acc_AccAllData[i].child[j].child[z].child[s].optName=="不选用"){
-                                        this.Acc_ParDisShowlist.push(this.Acc_AccAllData[i].child[j].child[z].child[s].optID)
+                                        this.Acc_ParDisShowlist.push({
+                                            compid:this.Acc_AccAllData[i].child[j].compID,
+                                            optid:this.Acc_AccAllData[i].child[j].child[z].child[s].optID
+                                        })
                                     }
                                 }
                             }else{
@@ -203,7 +206,6 @@
                     console.log("暂无附件");
                     return;
                 }
-                let c=performance.now();
                 this.$axios
                     .get(this.IP+'/get_proprel?propSet='+titleIdStr+'&optSet='+optionIdStr+'&series_id='+seriesid)
                     .then(response => {
@@ -254,18 +256,18 @@
                         /*console.log(this.AccRel_defalutShowOpt);*/
 
                         /*get_AccDefaultSellist()方法获取默认选中id数组*/
+                        /*let s=performance.now();*/
                         this.get_AccDefaultSellist(list);
+                        /*let ss=performance.now();
+                        console.log(ss-s)*/
                     })
                     .catch(function (err) {
                         console.log('Error')
                     });
-                let d=performance.now();
-                console.log("d-c:")
-                console.log(d-c)
             },
 
             /*得到详情框默认选中的选项id数组*/
-            get_AccDefaultSellist(list){
+            get_AccDefaultSellist(){
                 this.Acc_DefSelectedOptList=[];
                 /*得到点击时该标题以上已经选中的选项*/
                 if(this.Acc_invariabilityOptList!=""){
@@ -275,75 +277,44 @@
                 }
                 /*得到点击时该标题以下已经选中的选项*/
                 let index,reltit;
-                let a=performance.now();
                 let len=this.Acc_ParTitlist.length;
-                console.log(this.AccRel_defaultTit);
-                console.log(this.Acc_ParTitlist);   //88
-                console.log(this.AccRel_AllRellist);
-                console.log(this.Acc_ParOptlist);  //88
                 for (let i=this.Acc_ClickTitindex+1;i<len;i++){
                     /*需要改变的选项，添加默认fOptDefaultID*/
                     if(this.AccRel_defaultTit.includes(this.Acc_ParTitlist[i])){
                         reltit=this.get_Arrindex(this.AccRel_defaultTit,this.Acc_ParTitlist[i]);
-                        index=this.AccRel_AllRellist[reltit].fOptDefaultID;
+                        index=this.AccRel_defaultOpt[reltit]
                     }
                     /*没有改变的选项,看之前是否有选中的，有就添加那一项，没有就添加第一项*/
                     else{
-                        reltit=this.get_Arrindex(this.Acc_ParTitlist,this.Acc_ParTitlist[i]);
-                        for(let j=0;j<list[reltit].child.length;j++){
-                            if(this.Acc_ParOptlist==""){
-                                index=list[reltit].child[0].optID;
-                            }else{
-                                if(this.Acc_ParOptlist.includes(list[reltit].child[j].optID)){
-                                    index=list[reltit].child[j].optID;
-                                }
-                            }
-                        }
+                        index=this.Acc_ParOptlist[i]
                     }
                     this.Acc_DefSelectedOptList.push(index);
                 }
-                for(let i=0;i<len;i++){
-
-                }
-                let b=performance.now();
-                console.log("b-a:")
-                console.log(b-a);
-                /*console.log(this.Acc_DefSelectedOptList);*/
                 /*判断是否第一次执行获取是否显示的数组*/
                 if(this.m==0){
-                    let disaccparid=[];
-                    for(let i=0;i<this.Acc_DefSelectedOptList.length;i++){
-                        if(this.Acc_ParDisShowlist.includes(this.Acc_DefSelectedOptList[i])){
-                            disaccparid.push(this.Acc_DefSelectedOptList[i]);
-                        }
-                    }
                     /*得到隐藏的选项id数组*/
-                    let i=0,j=0,z=0,s=0;
                     this.Acc_displayOptlist=[];
-                    for(i in this.Acc_AccAllData){
-                        for(j in this.Acc_AccAllData[i].child){
-                            for(z in this.Acc_AccAllData[i].child[j].child){
-                                for(s in this.Acc_AccAllData[i].child[j].child[z].child){
-                                    if(disaccparid.includes(this.Acc_AccAllData[i].child[j].child[z].child[s].optID)){
-                                        this.Acc_displayOptlist.push(this.Acc_AccAllData[i].child[j].compID);
-                                    }
-                                }
-                            }
+                    let i=0;
+                    for(i in this.Acc_ParDisShowlist){
+                        if(this.Acc_DefSelectedOptList.includes(this.Acc_ParDisShowlist[i].optid)){
+                            this.Acc_displayOptlist.push(this.Acc_ParDisShowlist[i].compid);
                         }
                     }
                 }
-                /*console.log(this.Acc_displayOptlist)*/
             },
 
-            /*点击第一层选项时获得详情框的数据*/
+            /*点击选项时触发获得详情框的数据*/
             get_AccOptitemlist(compID,child){
+                /*点击选项时获得该选项默认的标题和选项id字符串*/
                 this.get_AccTitandOptStr(child);
-                this.get_Accdynamiclist(this.Acc_ParTitStr,this.Acc_ParOptStr,this.seriesid,child);
-                this.is_Showlidiv(compID,child)
+                /*调用is_Showlidiv方法判断详情框哪些需要隐藏*/
+                this.is_Showlidiv(compID,child);
+                /*点击选项时请求该选项的数据*/
+                this.get_Accdynamiclist(this.Acc_ParTitStr,this.Acc_ParOptStr,this.seriesid,this.Acc_Parlist)
             },
 
-            /*得到详情框变换的数据*/
-            get_AccParChangelist(divindex,child,compID){
+            /*点击详情框的li时触发得到详情框变换的数据*/
+            get_AccParChangelist(divindex){
                 /*遍历出点击时选项之前已经选好的选项数组id*/
                 let optionId=document.getElementsByClassName('changeParcolor');
                 this.Acc_invariabilityOptList=[];
@@ -351,18 +322,15 @@
                     this.Acc_invariabilityOptList.push(parseInt(optionId[j].id));
                 }
 
-                this.Acc_ParTitlist=[];
-                for(let i=0;i<child.length;i++){
-                    this.Acc_ParTitlist.push(child[i].propID)
-                }
                 let OptionIds="";
                 for(let i=0;i<optionId.length;i++){
                     OptionIds=OptionIds+"-"+optionId[i].id;
+                    this.Acc_ParOptlist.push(parseInt(optionId[i].id))
                 }
                 let optionIdStr=OptionIds.substring(1,OptionIds.length);
                 this.Acc_ClickTitindex=divindex;
-                /*console.log(optionIdStr);*/
-                this.get_Accdynamiclist(this.Acc_ParTitStr,optionIdStr,this.seriesid,child)
+                this.Acc_ParOptStr=optionIdStr;
+                this.get_Accdynamiclist(this.Acc_ParTitStr,this.Acc_ParOptStr,this.seriesid,this.Acc_Parlist)
             },
 
             /*得到默认的标题id和选项id字符串*/
@@ -370,27 +338,28 @@
                 /*得到所有标题id和选项id组成的字符串*/
                 let Acctit="",Accoptitem="",Accopt="";
                 let fpropindex;
-                let i=0,j=0;
                 this.Acc_ParTitlist=[],this.Acc_ParOptlist=[];
                 this.Acc_ParTitStr="",this.Acc_ParOptStr="";
-                for(i in list){
-                    this.Acc_ParTitlist.push(list[i].propID);        /*将每个标题id添加进标题数组*/
+                let partitlist=[],paroptlist=[];
+                for(let i=0;i<list.length;i++){
+                    partitlist.push(list[i].propID);        /*将每个标题id添加进标题id数组*/
                     Acctit=Acctit+'-'+list[i].propID;
                     if(this.Spe_titIdList.includes(list[i].fPropId)){
                         fpropindex=this.get_Arrindex(this.Spe_titIdList,list[i].fPropId);
-                        for(j in list[i].child){
+                        for(let j=0;j<list[i].child.length;j++){
                             if(list[i].child[j].optValue==this.Spe_SelectedValuelist[fpropindex]){
-                                /*isReloptlist.push(list[i].child[j].optID)*/
                                 Accoptitem=list[i].child[j].optID;
                             }
                         }
                     }else{
                         Accoptitem=list[i].child[0].optID
-                        /*noReloptlist.push(list[i].child[0].optID)*/
                     }
                     Accopt=Accopt+"-"+Accoptitem;
-                    this.Acc_ParOptlist.push(Accoptitem);           /*将每个选项id添加进选项id数组*/
+                    paroptlist.push(Accoptitem);           /*将每个选项id添加进选项id数组*/
                 }
+                this.Acc_Parlist=list;
+                this.Acc_ParTitlist=partitlist;
+                this.Acc_ParOptlist=paroptlist;
                 this.Acc_ParTitStr=Acctit.substring(1,Acctit.length);       /*所有标题id组成的字符串*/
                 this.Acc_ParOptStr=Accopt.substring(1,Accopt.length);       /*所有选项id组成的字符串*/
                 /*console.log(this.Acc_ParTitStr)
@@ -481,8 +450,6 @@
             },
 
             changeColor(){},
-
-
         },
     }
 </script>
